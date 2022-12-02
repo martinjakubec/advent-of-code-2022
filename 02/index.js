@@ -13,7 +13,6 @@ const table = {
     X: 'draw',
     Y: 'win',
     Z: 'loss',
-    
   },
   B: {
     X: 'loss',
@@ -27,16 +26,38 @@ const table = {
   },
 };
 
-const score = 0;
+let score = 0;
 
 const input = fs
   .readFileSync('input.txt', 'utf-8')
-  .split('\n')
+  .trim()
+  .split('\r\n')
   .map((round) => round.split(' '));
 
 for (let [enemy, me] of input) {
-  score += 
-  switch (table[enemy][me]) {
-    case ''
+  switch (me) {
+    case 'X':
+      score += lossPoints;
+      break;
+    case 'Y':
+      score += drawPoints;
+      break;
+    case 'Z':
+      score += winPoints;
+      break;
+  }
+
+  switch (me) {
+    case 'X':
+      score += 1;
+      break;
+    case 'Y':
+      score += 2;
+      break;
+    case 'Z':
+      score += 3;
+      break;
   }
 }
+
+console.log(score);
