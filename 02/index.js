@@ -1,61 +1,61 @@
 const fs = require('fs');
+const path = require('node:path');
 
-// rock - A / X
-// paper - B / Y
-// scis - C / Z
+// rock - A
+// paper - B
+// scis - C
 
-const lossPoints = 0;
-const drawPoints = 3;
-const winPoints = 6;
+// X - loss
+// Y - draw
+// Z - win
 
-const table = {
-  A: {
-    X: 'draw',
-    Y: 'win',
-    Z: 'loss',
-  },
-  B: {
-    X: 'loss',
-    Y: 'draw',
-    Z: 'win',
-  },
-  C: {
-    X: 'win',
-    Y: 'loss',
-    Z: 'draw',
-  },
-};
+function makeTable() {
+  this.rock = {
+    beats: 'scis',
+    draws: 'rock',
+    loses: 'paper',
+    pointsForPlaying: 1,
+  };
+  this.paper = {
+    beats: 'rock',
+    draws: 'paper',
+    loses: 'scis',
+    pointsForPlaying: 2,
+  };
+  this.scis = {
+    beats: 'paper',
+    draws: 'scis',
+    loses: 'rock',
+    pointsForPlaying: 3,
+  };
+  this.A = this.rock;
+  this.B = this.paper;
+  this.C = this.scis;
+}
+
+const table = new makeTable();
+console.log(table);
 
 let score = 0;
 
 const input = fs
-  .readFileSync('input.txt', 'utf-8')
+  .readFileSync(path.resolve(__dirname, 'input.txt'), 'utf-8')
   .trim()
-  .split('\r\n')
+  .split('\n')
   .map((round) => round.split(' '));
 
-for (let [enemy, me] of input) {
-  switch (me) {
+for (let [enemyChoice, result] of input) {
+  switch (result) {
     case 'X':
-      score += lossPoints;
+      score += table[table[enemyChoice].beats].pointsForPlaying;
       break;
     case 'Y':
-      score += drawPoints;
-      break;
-    case 'Z':
-      score += winPoints;
-      break;
-  }
-
-  switch (me) {
-    case 'X':
-      score += 1;
-      break;
-    case 'Y':
-      score += 2;
-      break;
-    case 'Z':
+      score += table[table[enemyChoice].draws].pointsForPlaying;
       score += 3;
+      break;
+    case 'Z':
+      score += table[table[enemyChoice].loses].pointsForPlaying;
+      score += 6;
       break;
   }
 }
